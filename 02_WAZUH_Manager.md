@@ -20,6 +20,8 @@ Adding an agent on my Ubuntu VM through clarifying public IP of my host window's
 
 <img width="1911" height="775" alt="image" src="https://github.com/user-attachments/assets/13257bf9-4528-4b88-8e6e-30f171f0c63c" />
 
+<img width="1375" height="890" alt="image" src="https://github.com/user-attachments/assets/e40ca7d2-a140-4250-8b16-6fb5abc9c162" />
 
+<img width="1914" height="872" alt="image" src="https://github.com/user-attachments/assets/61df85be-8c75-4c6e-af45-5ce4d95176e3" />
 
-
+Showing any changes made to a test folder whether added or deleted can be tracked through file integrity manager
