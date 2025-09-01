@@ -8,8 +8,7 @@ This documentation outlines the process of building a homelab environment using 
 
 Go to the [Ubuntu Downloads Page](https://ubuntu.com/download/desktop) and download the latest **LTS release** (24.04.3 LTS).
 
-<img src="<img width="2048" height="1026" alt="image" src="https://github.com/user-attachments/assets/10c40a5b-5290-467c-a72e-05833802c1a8" />
-" width="800">
+<img width="2048" height="1026" alt="image" src="https://github.com/user-attachments/assets/cd505f19-415a-48a9-9c79-20d0d661ffa9" />
 
 ---
 
@@ -23,9 +22,7 @@ Open **VirtualBox Manager** → Click **New** → Configure your VM:
 - **CPUs**: 2–4  
 - **Disk Size**: 25–80 GB (dynamically allocated)  
 
-<img src="images/vm-create.png" width="800">
-
-<img src="images/vm-hardware.png" width="800">
+<img width="1492" height="754" alt="image" src="https://github.com/user-attachments/assets/df0ea826-422b-4d4c-87d4-f01fdd4fdc45" />
 
 ---
 
@@ -33,7 +30,8 @@ Open **VirtualBox Manager** → Click **New** → Configure your VM:
 
 Attach the Ubuntu ISO you downloaded earlier as the **boot media**.
 
-<img src="images/vm-iso.png" width="800">
+<img width="1742" height="771" alt="image" src="https://github.com/user-attachments/assets/4504e99c-66fc-41d5-9d7f-6bc87a058fce" />
+
 
 ---
 
@@ -71,7 +69,7 @@ sudo reboot
 
 Once Guest Additions are installed, you can use **View → Full-screen Mode** or **Auto-resize Guest Display** in VirtualBox.
 
-<img src="images/vm-display.png" width="800">
+<img width="2048" height="1137" alt="image" src="https://github.com/user-attachments/assets/c6e53169-a548-4717-aeb3-0384b85da340" />
 
 ---
 
