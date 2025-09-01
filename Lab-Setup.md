@@ -8,7 +8,8 @@ This documentation outlines the process of building a homelab environment using 
 
 Go to the [Ubuntu Downloads Page](https://ubuntu.com/download/desktop) and download the latest **LTS release** (24.04.3 LTS).
 
-<img src="images/ubuntu-download.png" width="800">
+<img src="<img width="2048" height="1026" alt="image" src="https://github.com/user-attachments/assets/10c40a5b-5290-467c-a72e-05833802c1a8" />
+" width="800">
 
 ---
 
