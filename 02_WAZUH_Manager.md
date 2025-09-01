@@ -6,102 +6,140 @@ Although Wazuh is **not a firewall** (it does not block traffic), it works like 
 
 ---
 
+## ⚙️ Lab Setup Steps
+
+### 1. Installing the Wazuh Manager (Ubuntu VM)
+
+**Step 1.1 – Add Wazuh GPG Key**  
+```bash
+curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | sudo gpg --dearmor -o /usr/share/keyrings/wazuh-archive-keyring.gpg
+```
+This adds the GPG key to verify Wazuh packages.  
+
+**Step 1.2 – Download and Execute Wazuh Installation Script**  
+```bash
+curl -sO https://packages.wazuh.com/4.12/wazuh-install.sh && sudo bash ./wazuh-install.sh -a -i
+```
+- `-a`: Installs all components (manager, indexer).  
+- `-i`: Runs in interactive mode.  
+
+Once complete, Wazuh dashboard services are running on your VM.
+
+---
+
+### 2. Accessing the Wazuh Dashboard
+1. Run `ifconfig` on your Ubuntu VM to find its IP.  
+2. In a browser, visit:  
+   ```
+   https://<ubuntu-vm-ip>
+   ```
+3. Accept the browser security warning (self-signed cert).  
+4. Log in with the credentials shown after installation.
+
+---
+
+### 3. Installing the Wazuh Agent (Windows Host)
+1. Download the latest **Wazuh Agent for Windows** MSI installer.  
+2. Run the installer with default settings.  
+3. Open the **Wazuh Agent Manager GUI** from the Start Menu.
+
+---
+
+### 4. Registering the Agent with the Manager
+
+**Step 4.1 – Generate Agent Key on Ubuntu Manager**  
+```bash
+sudo /var/ossec/bin/manage_agents
+```
+- Select `A` to add an agent.  
+- Name it (e.g., `WindowsHost`).  
+- Extract the key with `E` and copy it.  
+
+**Step 4.2 – Apply Key in the Windows Agent**  
+- Paste the key into the Agent Manager GUI.  
+- Enter the Ubuntu VM’s IP address as the **manager**.  
+- Save and restart the agent service.  
+
+---
+
+### 5. File Integrity Monitoring (FIM) on Windows
+1. Open the config file:  
+   ```
+   C:\Program Files (x86)\ossec-agent\ossec.conf
+   ```
+2. Add a directory block:  
+   ```xml
+   <directories realtime="yes">C:\Users\abc\Test</directories>
+   ```
+3. Restart the Wazuh agent service.  
+This enables real-time monitoring of that folder.  
+
+---
+
+### 6. Verifying Setup
+1. Open the Wazuh Dashboard.  
+2. Navigate to **Agents** → verify Windows agent is listed as **Active**.  
+3. Go to **Integrity Monitoring**.  
+4. Create/modify/delete files in the test folder.  
+5. Confirm alerts appear in the dashboard.
+
+---
+
 ## 📸 Screenshots & Explanations
 
-### 1. Wazuh Dashboard – Login Page
+### Dashboard Login
 ![Dashboard Login](https://github.com/user-attachments/assets/ab4753f2-851f-42df-9d52-bfdb3aabb0af)
 
-- After installing Wazuh on the Ubuntu VM, I accessed the **dashboard** by typing the VM’s IP address into a browser (`https://<vm-ip>`).  
-- The dashboard runs on **port 443 (HTTPS)** and uses a **self-signed certificate**, so the browser shows a warning on first login.  
-
 ---
 
-### 2. Wazuh Dashboard – Overview
+### Dashboard Overview
 ![Dashboard Overview](https://github.com/user-attachments/assets/3ccc8192-37ae-4bc7-8d31-c70ce10ffa57)
 
-- This screenshot shows the Wazuh dashboard after login.  
-- Here I can monitor agent status, alerts, and activity across the environment.  
-- At this stage, no Windows agent was yet connected.  
-
 ---
 
-### 3. Adding a Windows Agent
+### Adding a Windows Agent
 ![Add Agent](https://github.com/user-attachments/assets/9b3241cf-6c22-4f57-8bd0-a38b27ac2596)
 
-- On the Ubuntu VM, I ran the `manage_agents` script to register a new agent.  
-- I gave the agent a name (`WindowsHost`) and extracted the **authentication key**.  
-- This key is required by the Windows host to securely register with the manager.  
-
 ---
 
-### 4. Windows Agent Installation
+### Windows Agent Installation
 ![Windows Agent](https://github.com/user-attachments/assets/2fcbc3fc-2308-4005-936f-63cd1033e3df)
 
-- Installed the **Wazuh agent MSI package** on my Windows host.  
-- In the **Agent Manager GUI**, I entered:  
-  - The **Ubuntu VM’s IP address** (manager).  
-  - The **agent key** generated earlier.  
-- Once applied, the agent service was restarted to begin communication with the Wazuh manager.  
-
 ---
 
-### 5. Confirming Agent Registration
+### Confirming Agent Registration
 ![Agent Added](https://github.com/user-attachments/assets/b0ca4df2-ca3a-44e2-af4e-e4c8e20fd4fe)
 
-- Back on the Ubuntu VM dashboard, the new **Windows agent** appeared in the agent list.  
-- This confirmed successful registration and communication between host and manager.  
-
 ---
 
-### 6. File Integrity Monitoring (FIM) Configuration
+### File Integrity Monitoring Configuration
 ![FIM Config](https://github.com/user-attachments/assets/f4afd2d2-7cf3-47f6-922f-d1939fc0bc1b)
 
-- Edited the Windows agent config (`ossec.conf`) to enable **real-time monitoring** on a test folder:  
-  ```xml
-  <directories realtime="yes">C:\Users\abc\Test</directories>
-  ```  
-- This tells Wazuh to track any create/modify/delete activity inside that folder.  
-- The agent service was restarted after saving changes.  
-
 ---
 
-### 7. Agent Active on Dashboard
+### Agent Active on Dashboard
 ![Active Agent](https://github.com/user-attachments/assets/13257bf9-4528-4b88-8e6e-30f171f0c63c)
 
-- The Windows agent now shows as **active** on the Wazuh dashboard.  
-- This means the configuration changes took effect, and the agent is reporting system activity.  
-
 ---
 
-### 8. File Integrity Monitoring Alerts
+### File Integrity Monitoring Alerts
 ![FIM Alerts](https://github.com/user-attachments/assets/e40ca7d2-a140-4250-8b16-6fb5abc9c162)
 
-- Created, modified, and deleted test files inside the monitored folder.  
-- Wazuh detected each change in **real time** and displayed alerts in the dashboard.  
-- This demonstrates how Wazuh can detect unauthorized or suspicious file modifications.  
-
 ---
 
-### 9. Detailed FIM Event Log
+### Detailed FIM Event Log
 ![FIM Event](https://github.com/user-attachments/assets/61df85be-8c75-4c6e-af45-5ce4d95176e3)
-
-- Here the dashboard shows the event details of a file modification.  
-- Metadata includes the filename, action (added/modified/deleted), and timestamp.  
-- This data can be used for investigations, compliance, and incident response.  
 
 ---
 
 ## ✅ Key Takeaways
-- Wazuh **does not block traffic** like a firewall.  
-- Instead, it **monitors system activity and logs**, alerting on suspicious events.  
-- With File Integrity Monitoring enabled, Wazuh can:  
-  - Detect changes to sensitive files/folders.  
-  - Alert administrators to unauthorized modifications.  
-  - Support compliance frameworks (PCI-DSS, HIPAA, NIST).  
+- Wazuh monitors **logs and file changes** but does not block traffic like a firewall.  
+- Configured Windows agent to send logs and events to Ubuntu manager.  
+- Demonstrated **real-time file integrity monitoring** with alerts visible in dashboard.  
 
 ---
 
 ## 🚀 Next Steps
-- Expand monitoring to cover additional folders and system logs.  
-- Test alerting rules for brute-force login attempts.  
-- Explore integration with **Suricata** or **firewall logs** to add network-level visibility.  
+- Expand monitoring beyond the test folder.  
+- Build alerting rules for brute-force login attempts.  
+- Integrate with Suricata or firewall logs for network-level visibility.  
